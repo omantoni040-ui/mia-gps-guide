@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>📍 MIA GPS Spoof — Panduan 1 Menit</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+         background:linear-gradient(160deg,#0f172a 0%,#1e3a5f 60%,#14532d 100%);
+         min-height:100vh; padding:24px; color:#fff; display:flex; justify-content:center; }
+  .wrap { max-width:480px; width:100%; }
+  h1 { font-size:22px; font-weight:700; margin-bottom:4px; }
+  .sub { color:rgba(255,255,255,0.6); font-size:13px; margin-bottom:20px; }
+  .card { background:rgba(255,255,255,0.07); backdrop-filter:blur(20px); border:1px solid rgba(255,255,255,0.12);
+          border-radius:18px; padding:20px; margin-bottom:14px; }
+  .card h2 { font-size:15px; margin-bottom:10px; display:flex; align-items:center; gap:8px; }
+  .step { display:flex; gap:10px; margin-bottom:8px; font-size:13px; line-height:1.5; color:rgba(255,255,255,0.85); }
+  .step b { min-width:22px; height:22px; background:#22c55e; border-radius:50%; display:flex;
+            align-items:center; justify-content:center; font-size:12px; flex-shrink:0; margin-top:1px; }
+  .btn { width:100%; background:linear-gradient(135deg,#22c55e,#16a34a); border:none; color:#fff;
+         border-radius:12px; padding:14px; font-size:14px; font-weight:700; cursor:pointer; margin-top:8px; }
+  .btn.sec { background:rgba(255,255,255,0.12); box-shadow:none; }
+  .btn:active { transform:scale(0.98); }
+  .codebox { background:rgba(0,0,0,0.4); border:1px dashed rgba(255,255,255,0.25); border-radius:10px;
+             padding:10px; font-size:10px; word-break:break-all; max-height:96px; overflow-y:auto;
+             color:#93c5fd; margin:10px 0; font-family:monospace; line-height:1.5; white-space:pre-wrap; }
+  .note { background:rgba(250,204,21,0.12); border:1px solid rgba(250,204,21,0.3); border-radius:10px;
+          padding:10px; font-size:12px; line-height:1.6; color:#fde68a; margin-top:10px; }
+  .ok { color:#4ade80; font-size:12px; min-height:18px; margin-top:6px; text-align:center; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>📍 GPS Spoof — MIA Presensi</h1>
+  <div class="sub">Bypass lokasi presensi myITS, tanpa ribet. Pilih caramu:</div>
+
+  <!-- METHOD A: Bookmarklet (Desktop) -->
+  <div class="card">
+    <h2>💻 A. Desktop (Chrome/Edge/Firefox) — 30 detik</h2>
+    <div class="step"><b>1</b> Klik tombol salin di bawah ⬇</div>
+    <button class="btn" onclick="copyCode()">📋 SALIN KODE</button>
+    <div id="copied" class="ok"></div>
+    <div class="codebox" id="codebox"></div>
+    <div class="step"><b>2</b> Buka <b style="min-width:0;background:none;color:#4ade80">mia.its.ac.id/presensi</b> & <b>login</b></div>
+    <div class="step"><b>3</b> Klik kanan address bar → <b>Paste</b> → <b>Enter</b></div>
+    <div class="step"><b>4</b> Isi koordinat (default kampus ITS) → OK → auto reload</div>
+    <div class="step"><b>5</b> Masukkan kode 6 digit dosen → <b>Hadir</b> ✅</div>
+  </div>
+
+  <!-- METHOD B: HP Android -->
+  <div class="card">
+    <h2>📱 B. HP Android — paling gampang</h2>
+    <div class="step"><b>1</b> Install app <b style="min-width:0;background:none;color:#4ade80">"Fake GPS Location"</b> dari Play Store</div>
+    <div class="step"><b>2</b> Developer Options ON → <b>Allow mock locations</b> diaktifkan</div>
+    <div class="step"><b>3</b> Di app: set lokasi ke kampus ITS (atau ruang kelas kamu)</div>
+    <div class="step"><b>4</b> Buka presensi di Chrome → <b>Hadir</b> ✅</div>
+    <div class="note">Chrome di HP baca lokasi mock dari sistem → sistem MIA gak bisa bedain.</div>
+  </div>
+
+  <!-- METHOD C: Auto bot -->
+  <div class="card">
+    <h2>🤖 C. Full Auto (Python + Playwright)</h2>
+    <div class="step"><b>1</b> Login otomatis ke myITS SSO</div>
+    <div class="step"><b>2</b> Override GPS di level browser + inject cache</div>
+    <div class="step"><b>3</b> Submit presensi dengan koordinat target</div>
+    <div class="note">Script lokal: <b style="background:none;color:#4ade80">~/mia-presensi-spoof/presensi_spoof.py</b></div>
+  </div>
+
+  <div class="note">
+    ⚠️ <b>Berlaku ±5 menit</b> — kalau pindah kelas / expired, ulangi lagi caranya.<br>
+    Kode 6 digit dari dosen <b>tetap wajib</b> (spoof cuma lokasi, bukan kode).
+  </div>
+</div>
+
+<script>
+const BM = `javascript:(function(){
+  var lat = prompt('Latitude (kosongkan = kampus ITS):', '-7.2819695');
+  if (lat === null) return;
+  lat = parseFloat(lat) || -7.2819695;
+  var lng = prompt('Longitude (kosongkan = kampus ITS):', '112.7950407');
+  if (lng === null) return;
+  lng = parseFloat(lng) || 112.7950407;
+  var ts = Date.now();
+  try { localStorage.setItem('user_location_cache', JSON.stringify({latitude: lat, longitude: lng, timestamp: ts})); } catch(e) {}
+  try {
+    var fakePos = { coords: { latitude: lat, longitude: lng, accuracy: 5 }, timestamp: ts };
+    Object.defineProperty(navigator, 'geolocation', {
+      get: function() { return { getCurrentPosition: function(cb){ cb(fakePos); }, watchPosition: function(cb){ cb(fakePos); return 0; }, clearWatch: function(){} }; },
+      configurable: true
+    });
+  } catch(e) {}
+  alert('✅ GPS SPOOF AKTIF\\nLokasi: ' + lat.toFixed(6) + ', ' + lng.toFixed(6) + '\\nBerlaku 5 menit. Reload otomatis!');
+  location.reload();
+})();`;
+
+document.getElementById('codebox').textContent = BM;
+
+function copyCode() {
+  const cb = document.getElementById('codebox');
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(BM).then(() => {
+      document.getElementById('copied').textContent = '✅ Terkopy! Tinggal paste di address bar (langkah 3)';
+    });
+  } else {
+    const range = document.createRange();
+    range.selectNodeContents(cb);
+    const sel = window.getSelection();
+    sel.removeAllRanges(); sel.addRange(range);
+    try { document.execCommand('copy'); } catch(e) {}
+    document.getElementById('copied').textContent = '✅ Terkopy! Tinggal paste di address bar (langkah 3)';
+  }
+}
+</script>
+</body>
+</html>
