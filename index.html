@@ -103,6 +103,17 @@
   }
   select:focus { border-color: var(--accent-border); box-shadow: 0 0 0 3px var(--accent-dim); }
   select option { background: #16130f; color: var(--txt); }
+  .coor-row { display: flex; gap: 8px; margin-bottom: 8px; }
+  .coor-row input {
+    flex: 1; min-width: 0;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.13);
+    border-radius: 13px; padding: 11px 12px;
+    color: var(--txt); font-size: 13px; font-family: inherit;
+    outline: none;
+  }
+  .coor-row input:focus { border-color: var(--accent-border); box-shadow: 0 0 0 3px var(--accent-dim); }
+  .coor-row input::placeholder { color: rgba(245,242,234,0.35); }
   .btn {
     width: 100%; border: none; color: #052e1c;
     background: linear-gradient(135deg, #34d399, #10b981);
@@ -152,6 +163,14 @@
       <option value="-1">🎲 Acak (anti-deteksi otomatis)</option>
     </select>
     <div id="kodestatus" class="ok"></div>
+
+    <label class="lbl" for="manualLat">Atau isi koordinat manual</label>
+    <div class="coor-row">
+      <input id="manualLat" type="text" inputmode="decimal" placeholder="Latitude, cth -7.2819695">
+      <input id="manualLng" type="text" inputmode="decimal" placeholder="Longitude, cth 112.7950407">
+    </div>
+    <button class="btn sec" onclick="genManual()" style="margin-top:0;">🎯 Pakai koordinat ini</button>
+    <div id="manualStatus" class="ok"></div>
 
     <button class="btn" onclick="copyCode()">📋 Salin kode & gunakan</button>
     <div id="copied" class="ok"></div>
@@ -274,9 +293,12 @@ function makeBM(idx) {
   if (idx < 0) { pool = GUIDE_POOL; } else { pool = [GUIDE_POOL[idx]]; }
   const poolArr = JSON.stringify(pool);
   const bm = "javascript:(function(){var POOL=[  [\"Arsitektur\", -7.2812372, 112.7940712],  [\"Biologi\", -7.2856952, 112.7943173],  [\"Desain Komunikasi Visual\", -7.2785419, 112.7969058],  [\"Desain Produk Industri\", -7.2788916, 112.7964643],  [\"Fisika\", -7.2845785, 112.7947413],  [\"Gedung Kuliah Terpadu\", -7.2789283, 112.7949039],  [\"Kimia\", -7.2838771, 112.7947291],  [\"Matematika\", -7.2849064, 112.794967],  [\"Perencanaan Wilayah & Kota\", -7.2797187, 112.7944083],  [\"Perpustakaan\", -7.2816092, 112.7954745],  [\"Sistem Informasi\", -7.2823959, 112.7947604],  [\"Sistem Perkapalan (C3)\", -7.2821244, 112.7967409],  [\"Statistika\", -7.2854211, 112.7941195],  [\"Teknik Elektro\", -7.2849264, 112.7960776],  [\"Teknik Fisika\", -7.2844092, 112.795618],  [\"Teknik Geofisika\", -7.2799537, 112.7955581],  [\"Teknik Geomatika\", -7.2801213, 112.7946348],  [\"Teknik Industri\", -7.2837293, 112.7976541],  [\"Teknik Informatika\", -7.2795736, 112.7972841],  [\"Teknik Instrumentasi\", -7.2783138, 112.7922179],  [\"Teknik Kelautan\", -7.2822204, 112.796426],  [\"Teknik Kimia\", -7.2829933, 112.7966985],  [\"Teknik Komputer\", -7.2844566, 112.7966371],  [\"Teknik Lingkungan\", -7.2797528, 112.7926403],  [\"Teknik Material & Metalurgi\", -7.2851298, 112.7978194],  [\"Teknik Mesin\", -7.2843551, 112.7961045],  [\"Teknik Perkapalan (C)\", -7.2821102, 112.7972141],  [\"Teknik Perkapalan (C2)\", -7.2818032, 112.7972901],  [\"Teknik Sipil\", -7.2807686, 112.7933211],  [\"Tower 1 ITS (MIPA Tower / Sains Tower)\", -7.2850531, 112.7941012],  [\"Tower 2 ITS (FT-EIC)\", -7.2852456, 112.7953424]];var picked=POOL[Math.floor(Math.random()*POOL.length)];var lat=picked[1],lon=picked[2],ts=Date.now();lat+=(Math.random()*30-15)/111320;lon+=(Math.random()*30-15)/(111320*Math.cos(lat*Math.PI/180));var accuracy=Math.random()<0.7?5+Math.floor(Math.random()*11):16+Math.floor(Math.random()*20);try{localStorage.setItem('user_location_cache',JSON.stringify({latitude:lat,longitude:lon,timestamp:ts}));}catch(e){}try{var fakePos={coords:{latitude:lat,longitude:lon,accuracy:accuracy},timestamp:ts};Object.defineProperty(navigator,'geolocation',{get:function(){return{getCurrentPosition:function(cb){cb(fakePos);},watchPosition:function(cb){cb(fakePos);return 0;},clearWatch:function(){}};},configurable:true});}catch(e){}alert('GPS SPOOF AKTIF\\nLokasi: '+picked[0]+'\\nKoordinat: '+lat.toFixed(6)+', '+lon.toFixed(6)+'\\nAccuracy: '+accuracy+'m');location.reload();})();";
-  // single-line: ganti POOL sesuai pilihan, sisanya tetap
   const pickedPool = (idx < 0) ? poolArr : JSON.stringify([pool[idx]]);
   return bm.replace(poolArr, pickedPool);
+}
+function makeBMManual(lat, lng) {
+  var tpl = "javascript:(function(){var lat=MK_LAT,lon=MK_LNG,ts=Date.now();lat+=(Math.random()*30-15)/111320;lon+=(Math.random()*30-15)/(111320*Math.cos(lat*Math.PI/180));var accuracy=Math.random()<0.7?5+Math.floor(Math.random()*11):16+Math.floor(Math.random()*20);try{localStorage.setItem('user_location_cache',JSON.stringify({latitude:lat,longitude:lon,timestamp:ts}));}catch(e){}try{var fakePos={coords:{latitude:lat,longitude:lon,accuracy:accuracy},timestamp:ts};Object.defineProperty(navigator,'geolocation',{get:function(){return{getCurrentPosition:function(cb){cb(fakePos);},watchPosition:function(cb){cb(fakePos);return 0;},clearWatch:function(){}};},configurable:true});}catch(e){}alert('GPS SPOOF AKTIF\\nKoordinat: '+lat.toFixed(6)+', '+lon.toFixed(6)+'\\nAccuracy: '+accuracy+'m');location.reload();})();";
+  return tpl.replace('MK_LAT', String(lat)).replace('MK_LNG', String(lng));
 }
 let BM = makeBM(-1);
 document.getElementById('codebox').textContent = BM;
@@ -287,6 +309,17 @@ function updBM() {
   document.getElementById('codebox').textContent = BM;
   const label = sel.options[sel.selectedIndex].text;
   document.getElementById('kodestatus').textContent = label.startsWith('🎲') ? 'Mode acak - lokasi beda tiap klik' : 'Kode siap: ' + label;
+}
+function genManual() {
+  const la = parseFloat(document.getElementById('manualLat').value);
+  const lo = parseFloat(document.getElementById('manualLng').value);
+  if (isNaN(la) || isNaN(lo)) {
+    document.getElementById('manualStatus').textContent = '⚠ Isi koordinat valid dulu (angka)';
+    return;
+  }
+  BM = makeBMManual(la, lo);
+  document.getElementById('codebox').textContent = BM;
+  document.getElementById('manualStatus').textContent = '✅ Kode siap - koordinat manual ' + la + ', ' + lo;
 }
 function copyCode() {
   const cb = document.getElementById('codebox');
@@ -324,88 +357,78 @@ function copyConsole() {
 <div id='consoleSource' hidden>// ═══════════════════════════════════════════════════════════════
 // 📍 MIA PRESENSI — GPS SPOOF CONSOLE (copy-paste, 5 detik)
 // ═══════════════════════════════════════════════════════════════
-// CARA PAKAI:
-//   1. Buka https://mia.its.ac.id/presensi/ (login dulu)
-//   2. F12 → Console → paste SEMUA di bawah → Enter
-//   3. Auto reload → klik Hadir → beres ✅
+// PILIH MODE:
+//   MODE = 0  → koordinat manual (isi LAT/LNG di bawah)
+//   MODE = 1  → gedung (pilih angka di GE)
 //
-// SETTING — pilih salah satu mode:
-// A) KOORDINAT MANUAL: isi LAT/LNG di bawah
-// B) GEDUNG: ganti GEDUNG = angka (0 = acak)
-//   1=GKT 2=Perpus 3=Informatika 4=SistemInfo 5=Elektro 6=Mesin
-//   7=Kimia 8=Industri 9=Sipil 10=Lingkungan 11=Perkapalan
-//   12=Kelautan 13=Arsitektur 14=DKV 15=DesainProduk 16=PWK
-//   17=Tower1(MIPA) 18=Tower2(FT-EIC) 19=Matematika 20=Fisika
-//   21=Kimia 22=Statistika 23=Biologi 24=Geomatika 25=Geofisika
-//   26=Material 27=Komputer 28=Instrumentasi 29=TeknikFisika
+// GANTI SESUAI KEBUTUHAN:
+var LAT = -7.2819695;    // ← koordinat manual (latitude)
+var LNG = 112.7950407;   // ← koordinat manual (longitude)
+var MODE = 0;            // 0 = manual, 1 = gedung
+var GE = 17;             // kepake kalau MODE = 1 (17 = Tower 1)
 // ═══════════════════════════════════════════════════════════════
 
-// ==== A) MODE MANUAL — isi koordinat lo di sini ====
-const LAT = -7.2819695;   // ← GANTI
-const LNG = 112.7950407;  // ← GANTI
-const MODE = &quot;GEDUNG&quot;;    // &quot;MANUAL&quot; atau &quot;GEDUNG&quot;
-const GEDUNG = 17;        // kepake kalau MODE = &quot;GEDUNG&quot;
-
-// ==== B) POOL GEDUNG (jangan diubah) ====
-const POOL = [
-  [&quot;GKT&quot;, -7.2789283, 112.7949039], [&quot;Perpustakaan&quot;, -7.2816092, 112.7954745],
-  [&quot;Informatika&quot;, -7.2795736, 112.7972841], [&quot;Sistem Informasi&quot;, -7.2823959, 112.7947604],
-  [&quot;Elektro&quot;, -7.2849264, 112.7960776], [&quot;Mesin&quot;, -7.2843551, 112.7961045],
-  [&quot;Kimia&quot;, -7.2829933, 112.7966985], [&quot;Industri&quot;, -7.2837293, 112.7976541],
-  [&quot;Sipil&quot;, -7.2807686, 112.7933211], [&quot;Lingkungan&quot;, -7.2797528, 112.7926403],
-  [&quot;Perkapalan&quot;, -7.2821102, 112.7972141], [&quot;Kelautan&quot;, -7.2822204, 112.7964260],
-  [&quot;Arsitektur&quot;, -7.2812372, 112.7940712], [&quot;DKV&quot;, -7.2785419, 112.7969058],
-  [&quot;Desain Produk&quot;, -7.2788916, 112.7964643], [&quot;PWK&quot;, -7.2797187, 112.7944083],
-  [&quot;Tower 1 (MIPA)&quot;, -7.2850531, 112.7941012], [&quot;Tower 2 (FT-EIC)&quot;, -7.2852456, 112.7953424],
-  [&quot;Matematika&quot;, -7.2849064, 112.7949670], [&quot;Fisika&quot;, -7.2845785, 112.7947413],
-  [&quot;Kimia&quot;, -7.2838771, 112.7947291], [&quot;Statistika&quot;, -7.2854211, 112.7941195],
-  [&quot;Biologi&quot;, -7.2856952, 112.7943173], [&quot;Geomatika&quot;, -7.2801213, 112.7946348],
-  [&quot;Geofisika&quot;, -7.2799537, 112.7955581], [&quot;Material&quot;, -7.2851298, 112.7978194],
-  [&quot;Komputer&quot;, -7.2844566, 112.7966371], [&quot;Instrumentasi&quot;, -7.2783138, 112.7922179],
-  [&quot;Teknik Fisika&quot;, -7.2844092, 112.7956180],
-];
-
-// ==== EKSEKUSI (jangan diubah) ====
+// jangan ubah di bawah sini
 (function () {
-  let label = &quot;Manual&quot;;
-  let lat = LAT, lon = LNG;
+  var POOL = [
+    [-7.2789283, 112.7949039, &quot;GKT&quot;], [-7.2816092, 112.7954745, &quot;Perpustakaan&quot;],
+    [-7.2795736, 112.7972841, &quot;Informatika&quot;], [-7.2823959, 112.7947604, &quot;Sistem Info&quot;],
+    [-7.2849264, 112.7960776, &quot;Elektro&quot;], [-7.2843551, 112.7961045, &quot;Mesin&quot;],
+    [-7.2829933, 112.7966985, &quot;Kimia&quot;], [-7.2837293, 112.7976541, &quot;Industri&quot;],
+    [-7.2807686, 112.7933211, &quot;Sipil&quot;], [-7.2797528, 112.7926403, &quot;Lingkungan&quot;],
+    [-7.2821102, 112.7972141, &quot;Perkapalan&quot;], [-7.2822204, 112.7964260, &quot;Kelautan&quot;],
+    [-7.2812372, 112.7940712, &quot;Arsitektur&quot;], [-7.2785419, 112.7969058, &quot;DKV&quot;],
+    [-7.2788916, 112.7964643, &quot;Desain Produk&quot;], [-7.2797187, 112.7944083, &quot;PWK&quot;],
+    [-7.2850531, 112.7941012, &quot;Tower 1 (MIPA)&quot;], [-7.2852456, 112.7953424, &quot;Tower 2&quot;],
+    [-7.2849064, 112.7949670, &quot;Matematika&quot;], [-7.2845785, 112.7947413, &quot;Fisika&quot;],
+    [-7.2838771, 112.7947291, &quot;Kimia&quot;], [-7.2854211, 112.7941195, &quot;Statistika&quot;],
+    [-7.2856952, 112.7943173, &quot;Biologi&quot;], [-7.2801213, 112.7946348, &quot;Geomatika&quot;],
+    [-7.2799537, 112.7955581, &quot;Geofisika&quot;], [-7.2851298, 112.7978194, &quot;Material&quot;],
+    [-7.2844566, 112.7966371, &quot;Komputer&quot;], [-7.2783138, 112.7922179, &quot;Instrumentasi&quot;],
+    [-7.2844092, 112.7956180, &quot;Teknik Fisika&quot;], [-7.2821244, 112.7967409, &quot;Sistem Perkapalan&quot;],
+    [-7.2818032, 112.7972901, &quot;Perkapalan C2&quot;]
+  ];
 
-  if (MODE === &quot;GEDUNG&quot;) {
-    const p = POOL[GEDUNG % POOL.length];
-    lat = p[1]; lon = p[2]; label = p[0];
+  var lat, lon, label;
+  if (MODE === 1) {
+    var i = Math.min(Math.max(GE, 0), POOL.length - 1);
+    lat = POOL[i][0]; lon = POOL[i][1]; label = POOL[i][2];
+  } else {
+    lat = LAT; lon = LNG; label = &quot;Manual&quot;;
   }
 
-  // jitter ±15m biar gak kedetect fake
+  // jitter ±15m
   lat += (Math.random() * 30 - 15) / 111320;
   lon += (Math.random() * 30 - 15) / (111320 * Math.cos(lat * Math.PI / 180));
-  const acc = Math.random() &lt; 0.7 ? 5 + Math.floor(Math.random() * 11) : 16 + Math.floor(Math.random() * 20);
-  const ts = Date.now();
+  var acc = Math.random() &lt; 0.7 ? 5 + Math.floor(Math.random() * 11) : 16 + Math.floor(Math.random() * 20);
+  var ts = Date.now();
 
-  // 1) cache lokasi (dibaca app duluan)
+  // 1) cache lokasi
   localStorage.setItem(&#x27;user_location_cache&#x27;, JSON.stringify({ latitude: lat, longitude: lon, timestamp: ts }));
 
   // 2) override geolocation
-  const fake = { coords: { latitude: lat, longitude: lon, accuracy: acc }, timestamp: ts };
+  var fake = { coords: { latitude: lat, longitude: lon, accuracy: acc }, timestamp: ts };
   Object.defineProperty(navigator, &#x27;geolocation&#x27;, {
-    get: () =&gt; ({
-      getCurrentPosition: cb =&gt; cb(fake),
-      watchPosition: cb =&gt; { cb(fake); return 0; },
-      clearWatch: () =&gt; {}
-    }),
+    get: function () {
+      return {
+        getCurrentPosition: function (cb) { cb(fake); },
+        watchPosition: function (cb) { cb(fake); return 0; },
+        clearWatch: function () {}
+      };
+    },
     configurable: true
   });
 
   // 3) permission palsu
   if (navigator.permissions &amp;&amp; navigator.permissions.query) {
-    navigator.permissions.query = () =&gt; Promise.resolve({
-      state: &#x27;granted&#x27;, onchange: null,
-      addEventListener: () =&gt; {}, removeEventListener: () =&gt; {}
-    });
+    navigator.permissions.query = function () {
+      return Promise.resolve({ state: &#x27;granted&#x27;, onchange: null, addEventListener: function () {}, removeEventListener: function () {} });
+    };
   }
 
-  console.log(`%c✅ GPS SPOOF: ${label} | ${lat.toFixed(6)}, ${lon.toFixed(6)} | acc ${acc}m`, &#x27;color:#22c55e;font-weight:bold;font-size:13px&#x27;);
-  console.log(&#x27;%c🔄 Reload otomatis...&#x27;, &#x27;color:#f59e0b&#x27;);
-  setTimeout(() =&gt; location.reload(), 1000);
+  console.log(&quot;[GPS SPOOF] &quot; + label + &quot; | &quot; + lat.toFixed(6) + &quot;, &quot; + lon.toFixed(6) + &quot; | acc &quot; + acc + &quot;m&quot;);
+  console.log(&quot;[GPS SPOOF] Reload otomatis...&quot;);
+  setTimeout(function () { location.reload(); }, 1000);
 })();</div>
 <script>document.getElementById('consolebox').textContent = document.getElementById('consoleSource').textContent;</script>
 </body>
