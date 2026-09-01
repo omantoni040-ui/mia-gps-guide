@@ -2,9 +2,7 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Expires" content="0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>📍 MIA GPS Spoof — Panduan 1 Menit</title>
 <style>
   * { margin:0; padding:0; box-sizing:border-box; }
@@ -26,7 +24,7 @@
   .btn:active { transform:scale(0.98); }
   .codebox { background:rgba(0,0,0,0.4); border:1px dashed rgba(255,255,255,0.25); border-radius:10px;
              padding:10px; font-size:10px; word-break:break-all; max-height:96px; overflow-y:auto;
-             color:#93c5fd; margin:10px 0; font-family:monospace; line-height:1.5; white-space:pre-wrap; }
+             color:#93c5fd; margin:10px 0; font-family:monospace; line-height:1.5; }
   .note { background:rgba(250,204,21,0.12); border:1px solid rgba(250,204,21,0.3); border-radius:10px;
           padding:10px; font-size:12px; line-height:1.6; color:#fde68a; margin-top:10px; }
   .ok { color:#4ade80; font-size:12px; min-height:18px; margin-top:6px; text-align:center; }
@@ -35,7 +33,7 @@
 <body>
 <div class="wrap">
   <h1>📍 GPS Spoof — MIA Presensi</h1>
-  <div class="sub">Bypass lokasi presensi myITS, tanpa ribet. Pilih caramu:</div>
+  <div class="sub">Bypass lokasi presensi myITS — **lokasi dinamis anti-deteksi** (45 gedung kampus + jitter GPS). Pilih caramu:</div>
 
   <!-- METHOD A: Bookmarklet (Desktop) -->
   <div class="card">
@@ -66,7 +64,7 @@
     <div class="step"><b>1</b> Login otomatis ke myITS SSO</div>
     <div class="step"><b>2</b> Override GPS di level browser + inject cache</div>
     <div class="step"><b>3</b> Submit presensi dengan koordinat target</div>
-    <div class="note">Script lokal: <b style="background:none;color:#4ade80">~/mia-presensi-spoof/presensi_spoof.py</b></div>
+    <button class="btn sec" onclick="window.open('https://github.com/', '_blank')">Script ada di: ~/mia-presensi-spoof/presensi_spoof.py</button>
   </div>
 
   <div class="note">
@@ -76,42 +74,120 @@
 </div>
 
 <script>
+// embed bookmarklet JS here
 const BM = `javascript:(function(){
-  var lat = prompt('Latitude (kosongkan = kampus ITS):', '-7.2819695');
-  if (lat === null) return;
-  lat = parseFloat(lat) || -7.2819695;
-  var lng = prompt('Longitude (kosongkan = kampus ITS):', '112.7950407');
-  if (lng === null) return;
-  lng = parseFloat(lng) || 112.7950407;
+  const POOL = [
+    ["Gedung Kuliah Terpadu (GKT)", -7.2789283, 112.7949039],
+    ["Rektorat ITS", -7.2814439, 112.7945831],
+    ["Perpustakaan ITS", -7.2816092, 112.7954745],
+    ["Departemen Teknik Informatika", -7.2795736, 112.7972841],
+    ["Departemen Sistem Informasi", -7.2823959, 112.7947604],
+    ["Teknik Elektro", -7.2849264, 112.7960776],
+    ["Teknik Mesin", -7.2843551, 112.7961045],
+    ["Teknik Kimia", -7.2829933, 112.7966985],
+    ["Teknik Industri", -7.2837293, 112.7976541],
+    ["Teknik Sipil", -7.2808457, 112.7936216],
+    ["Teknik Lingkungan", -7.2797528, 112.7926403],
+    ["Teknik Perkapalan", -7.2821102, 112.7972141],
+    ["Teknik Kelautan", -7.2822204, 112.7964260],
+    ["Arsitektur", -7.2812372, 112.7940712],
+    ["Desain Produk Industri", -7.2788916, 112.7964643],
+    ["Desain Komunikasi Visual", -7.2785419, 112.7969058],
+    ["Perencanaan Wilayah & Kota", -7.2797187, 112.7944083],
+    ["MIPA Tower", -7.2850531, 112.7941012],
+    ["Matematika", -7.2849064, 112.7949670],
+    ["Fisika", -7.2845785, 112.7947413],
+    ["Kimia", -7.2838771, 112.7947291],
+    ["Statistika", -7.2854211, 112.7941195],
+    ["Biologi FMIPA", -7.2856952, 112.7943173],
+    ["Teknik Geomatika", -7.2801213, 112.7946348],
+    ["Teknik Geofisika", -7.2799537, 112.7955581],
+    ["Teknik Material & Metalurgi", -7.2851298, 112.7978194],
+    ["Teknik Komputer", -7.2844566, 112.7966371],
+    ["Gedung Pusat Robotika", -7.2770305, 112.7979550],
+    ["SCC", -7.2834463, 112.7935925],
+    ["Masjid Manarul Ilmi", -7.2823625, 112.7930786],
+    ["Kantin Pusat", -7.2838330, 112.7941114],
+    ["Gedung Teater A", -7.2834168, 112.7950993],
+    ["Puskom", -7.2830297, 112.7949040],
+    ["BAUK ITS", -7.2827647, 112.7947578],
+    ["Lab Bahasa", -7.2825597, 112.7955965],
+    ["LPPM ITS", -7.2808765, 112.7962040],
+    ["Gedung Pusat Riset", -7.2810738, 112.7972911],
+    ["Gedung D3", -7.2788135, 112.7924260],
+    ["Gedung Nasdec", -7.2790337, 112.7984994],
+    ["GOR Bulutangkis", -7.2867484, 112.7930037],
+    ["Stadion ITS", -7.2854059, 112.7918306],
+    ["Teknik Instrumentasi", -7.2783138, 112.7922179],
+    ["Teknik Fisika", -7.2844092, 112.7956180],
+    ["Theater B", -7.2842503, 112.7950745]
+  ];
+
+  // jitter ±15m biar koordinat gak pernah sama persis 2x
+  function jitter(lat, lon) {
+    var latOff = (Math.random() * 30 - 15) / 111320;   // ±15m lat
+    var lonOff = (Math.random() * 30 - 15) / (111320 * Math.cos(lat * Math.PI / 180));
+    return [lat + latOff, lon + lonOff];
+  }
+
+  // Pilih gedung acak + jitter
+  var idx = Math.floor(Math.random() * POOL.length);
+  var picked = POOL[idx];
+  var coords = jitter(picked[1], picked[2]);
+  var lat = coords[0], lon = coords[1];
   var ts = Date.now();
-  try { localStorage.setItem('user_location_cache', JSON.stringify({latitude: lat, longitude: lng, timestamp: ts})); } catch(e) {}
+
+  // accuracy dinamis: 70% outdoor 5-15m, 30% indoor 16-35m
+  var accuracy = (Math.random() < 0.7) ? (5 + Math.floor(Math.random() * 11)) : (16 + Math.floor(Math.random() * 20));
+
+  // LAPIS 1: inject cache lokasi (app baca ini DULU)
   try {
-    var fakePos = { coords: { latitude: lat, longitude: lng, accuracy: 5 }, timestamp: ts };
+    localStorage.setItem('user_location_cache', JSON.stringify({
+      latitude: lat, longitude: lon, timestamp: ts
+    }));
+  } catch(e) {}
+
+  // LAPIS 2: override geolocation API (backup)
+  try {
+    var fakePos = { coords: { latitude: lat, longitude: lon, accuracy: accuracy,
+                              altitude: null, heading: null, speed: null }, timestamp: ts };
     Object.defineProperty(navigator, 'geolocation', {
-      get: function() { return { getCurrentPosition: function(cb){ cb(fakePos); }, watchPosition: function(cb){ cb(fakePos); return 0; }, clearWatch: function(){} }; },
+      get: function() {
+        return {
+          getCurrentPosition: function(cb){ cb(fakePos); },
+          watchPosition: function(cb){ cb(fakePos); return 0; },
+          clearWatch: function(){}
+        };
+      },
       configurable: true
     });
+    if (navigator.permissions && navigator.permissions.query) {
+      navigator.permissions.query = function() {
+        return Promise.resolve({ state: 'granted', onchange: null,
+          addEventListener: function(){}, removeEventListener: function(){} });
+      };
+    }
   } catch(e) {}
-  alert('✅ GPS SPOOF AKTIF\\nLokasi: ' + lat.toFixed(6) + ', ' + lng.toFixed(6) + '\\nBerlaku 5 menit. Reload otomatis!');
+
+  alert('✅ GPS SPOOF AKTIF (v2 - lokasi dinamis)\n\n' +
+        'Gedung: ' + picked[0] + '\n' +
+        'Koordinat: ' + lat.toFixed(6) + ', ' + lon.toFixed(6) + '\n' +
+        'Accuracy: ' + accuracy + 'm\n\n' +
+        'Lokasi BERPINDAH tiap pemakaian → anti-deteksi fake.\n' +
+        'Berlaku 5 menit. Reload otomatis!');
   location.reload();
-})();`;
+})();`;`;
 
 document.getElementById('codebox').textContent = BM;
 
 function copyCode() {
   const cb = document.getElementById('codebox');
-  if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(BM).then(() => {
-      document.getElementById('copied').textContent = '✅ Terkopy! Tinggal paste di address bar (langkah 3)';
-    });
-  } else {
-    const range = document.createRange();
-    range.selectNodeContents(cb);
-    const sel = window.getSelection();
-    sel.removeAllRanges(); sel.addRange(range);
-    try { document.execCommand('copy'); } catch(e) {}
-    document.getElementById('copied').textContent = '✅ Terkopy! Tinggal paste di address bar (langkah 3)';
-  }
+  const range = document.createRange();
+  range.selectNodeContents(cb);
+  const sel = window.getSelection();
+  sel.removeAllRanges(); sel.addRange(range);
+  try { document.execCommand('copy'); } catch(e) {}
+  document.getElementById('copied').textContent = '✅ Terkopy! Tinggal paste di address bar (langkah 3)';
 }
 </script>
 </body>
