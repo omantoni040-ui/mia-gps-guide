@@ -192,6 +192,25 @@
     <div class="note">Chrome di HP baca lokasi mock dari sistem, MIA gak bisa bedain.</div>
   </div>
 
+
+  <div class="card">
+    <div class="card-head">
+      <div class="card-icon">🌐</div>
+      <div>
+        <h2>HP · Tanpa Fake GPS</h2>
+        <div class="sub">Kiwi Browser / Firefox — sekali setup, langsung bisa</div>
+      </div>
+    </div>
+    <div class="step"><b class="num">1</b> Install <b class="hl">Kiwi Browser</b> atau <b class="hl">Firefox</b> (Play Store)</div>
+    <div class="step"><b class="num">2</b> Di Kiwi: install ekstensi <b class="hl">"Location Guard"</b> dari Chrome Web Store</div>
+    <div class="step"><b class="num">3</b> Di Firefox: simpan kode di bawah jadi bookmark (bookmark &gt; Edit &gt; tempel di URL)</div>
+    <div class="step"><b class="num">4</b> Buka MIA → tap ikon ekstensi / buka bookmark → <b class="hl">Hadir</b></div>
+    <button class="btn sec" onclick="copyBookmarkHP()">📋 Salin kode bookmark HP</button>
+    <div id="copiedHP" class="ok"></div>
+    <div class="codebox" id="hpbox" style="max-height:150px;"></div>
+    <div class="note">Chrome standar di HP <b>memblokir</b> paste kode di address bar. Kiwi &amp; Firefox tidak — makanya pake browser itu.</div>
+  </div>
+
   <div class="card">
     <div class="card-head">
       <div class="card-icon">⌨️</div>
@@ -321,6 +340,22 @@ function genManual() {
   document.getElementById('codebox').textContent = BM;
   document.getElementById('manualStatus').textContent = '✅ Kode siap - koordinat manual ' + la + ', ' + lo;
 }
+function copyBookmarkHP() {
+  const cb = document.getElementById('hpbox');
+  const range = document.createRange();
+  range.selectNodeContents(cb);
+  const sel = window.getSelection();
+  sel.removeAllRanges(); sel.addRange(range);
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(cb.textContent.trim()).then(() => {
+      document.getElementById('copiedHP').textContent = 'Terkopy! Simpan jadi bookmark, nama bebas (mis. GPS)';
+    }).catch(() => {
+      document.getElementById('copiedHP').textContent = 'Kode ke-select - tinggal salin (long-press > Salin)';
+    });
+  } else {
+    document.getElementById('copiedHP').textContent = 'Kode ke-select - tinggal salin (long-press > Salin)';
+  }
+}
 function copyCode() {
   const cb = document.getElementById('codebox');
   const range = document.createRange();
@@ -431,5 +466,7 @@ var GE = 17;             // kepake kalau MODE = 1 (17 = Tower 1)
   setTimeout(function () { location.reload(); }, 1000);
 })();</div>
 <script>document.getElementById('consolebox').textContent = document.getElementById('consoleSource').textContent;</script>
+<div id='hpSource' hidden>javascript:(function(){var POOL=[  [&quot;Arsitektur&quot;, -7.2812372, 112.7940712],  [&quot;Biologi&quot;, -7.2856952, 112.7943173],  [&quot;Desain Komunikasi Visual&quot;, -7.2785419, 112.7969058],  [&quot;Desain Produk Industri&quot;, -7.2788916, 112.7964643],  [&quot;Fisika&quot;, -7.2845785, 112.7947413],  [&quot;Gedung Kuliah Terpadu&quot;, -7.2789283, 112.7949039],  [&quot;Kimia&quot;, -7.2838771, 112.7947291],  [&quot;Matematika&quot;, -7.2849064, 112.794967],  [&quot;Perencanaan Wilayah &amp; Kota&quot;, -7.2797187, 112.7944083],  [&quot;Perpustakaan&quot;, -7.2816092, 112.7954745],  [&quot;Sistem Informasi&quot;, -7.2823959, 112.7947604],  [&quot;Sistem Perkapalan (C3)&quot;, -7.2821244, 112.7967409],  [&quot;Statistika&quot;, -7.2854211, 112.7941195],  [&quot;Teknik Elektro&quot;, -7.2849264, 112.7960776],  [&quot;Teknik Fisika&quot;, -7.2844092, 112.795618],  [&quot;Teknik Geofisika&quot;, -7.2799537, 112.7955581],  [&quot;Teknik Geomatika&quot;, -7.2801213, 112.7946348],  [&quot;Teknik Industri&quot;, -7.2837293, 112.7976541],  [&quot;Teknik Informatika&quot;, -7.2795736, 112.7972841],  [&quot;Teknik Instrumentasi&quot;, -7.2783138, 112.7922179],  [&quot;Teknik Kelautan&quot;, -7.2822204, 112.796426],  [&quot;Teknik Kimia&quot;, -7.2829933, 112.7966985],  [&quot;Teknik Komputer&quot;, -7.2844566, 112.7966371],  [&quot;Teknik Lingkungan&quot;, -7.2797528, 112.7926403],  [&quot;Teknik Material &amp; Metalurgi&quot;, -7.2851298, 112.7978194],  [&quot;Teknik Mesin&quot;, -7.2843551, 112.7961045],  [&quot;Teknik Perkapalan (C)&quot;, -7.2821102, 112.7972141],  [&quot;Teknik Perkapalan (C2)&quot;, -7.2818032, 112.7972901],  [&quot;Teknik Sipil&quot;, -7.2807686, 112.7933211],  [&quot;Tower 1 ITS (MIPA Tower / Sains Tower)&quot;, -7.2850531, 112.7941012],  [&quot;Tower 2 ITS (FT-EIC)&quot;, -7.2852456, 112.7953424]];var p=POOL[Math.floor(Math.random()*POOL.length)];var lat=p[1],lon=p[2],ts=Date.now();lat+=(Math.random()*30-15)/111320;lon+=(Math.random()*30-15)/(111320*Math.cos(lat*Math.PI/180));try{localStorage.setItem(&#x27;user_location_cache&#x27;,JSON.stringify({latitude:lat,longitude:lon,timestamp:ts}));}catch(e){}var f={coords:{latitude:lat,longitude:lon,accuracy:10},timestamp:ts};Object.defineProperty(navigator,&#x27;geolocation&#x27;,{get:function(){return{getCurrentPosition:function(cb){cb(f);},watchPosition:function(cb){cb(f);return 0;},clearWatch:function(){}};},configurable:true});location.reload();})();</div>
+<script>document.getElementById('hpbox').textContent = document.getElementById('hpSource').textContent;</script>
 </body>
 </html>
