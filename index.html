@@ -103,6 +103,105 @@
     <button class="btn sec" onclick="window.open('https://github.com/', '_blank')">Script ada di: ~/mia-presensi-spoof/presensi_spoof.py</button>
   </div>
 
+
+  <!-- METHOD D: Console (advanced) -->
+  <div class="card">
+    <h2>💻 D. Console (F12) — koordinat bebas, tanpa bookmark</h2>
+    <div class="step"><b>1</b> Buka <b style="min-width:0;background:none;color:#4ade80">mia.its.ac.id/presensi</b> & login</div>
+    <div class="step"><b>2</b> Tekan <b style="min-width:0;background:none;color:#4ade80">F12</b> → tab <b>Console</b></div>
+    <div class="step"><b>3</b> Klik tombol salin di bawah → paste di console → Enter</div>
+    <div class="step"><b>4</b> Auto reload → <b>Hadir</b> ✅</div>
+    <button class="btn sec" onclick="copyConsole()">📋 SALIN KODE CONSOLE</button>
+    <div id="copiedConsole" class="ok"></div>
+    <div class="codebox" id="consolebox" style="max-height:160px;">// ═══════════════════════════════════════════════════════════════
+// 📍 MIA PRESENSI — GPS SPOOF CONSOLE (copy-paste, 5 detik)
+// ═══════════════════════════════════════════════════════════════
+// CARA PAKAI:
+//   1. Buka https://mia.its.ac.id/presensi/ (login dulu)
+//   2. F12 → Console → paste SEMUA di bawah → Enter
+//   3. Auto reload → klik Hadir → beres ✅
+//
+// SETTING — pilih salah satu mode:
+// A) KOORDINAT MANUAL: isi LAT/LNG di bawah
+// B) GEDUNG: ganti GEDUNG = angka (0 = acak)
+//   1=GKT 2=Perpus 3=Informatika 4=SistemInfo 5=Elektro 6=Mesin
+//   7=Kimia 8=Industri 9=Sipil 10=Lingkungan 11=Perkapalan
+//   12=Kelautan 13=Arsitektur 14=DKV 15=DesainProduk 16=PWK
+//   17=Tower1(MIPA) 18=Tower2(FT-EIC) 19=Matematika 20=Fisika
+//   21=Kimia 22=Statistika 23=Biologi 24=Geomatika 25=Geofisika
+//   26=Material 27=Komputer 28=Instrumentasi 29=TeknikFisika
+// ═══════════════════════════════════════════════════════════════
+
+// ==== A) MODE MANUAL — isi koordinat lo di sini ====
+const LAT = -7.2819695;   // ← GANTI
+const LNG = 112.7950407;  // ← GANTI
+const MODE = &quot;GEDUNG&quot;;    // &quot;MANUAL&quot; atau &quot;GEDUNG&quot;
+const GEDUNG = 17;        // kepake kalau MODE = &quot;GEDUNG&quot;
+
+// ==== B) POOL GEDUNG (jangan diubah) ====
+const POOL = [
+  [&quot;GKT&quot;, -7.2789283, 112.7949039], [&quot;Perpustakaan&quot;, -7.2816092, 112.7954745],
+  [&quot;Informatika&quot;, -7.2795736, 112.7972841], [&quot;Sistem Informasi&quot;, -7.2823959, 112.7947604],
+  [&quot;Elektro&quot;, -7.2849264, 112.7960776], [&quot;Mesin&quot;, -7.2843551, 112.7961045],
+  [&quot;Kimia&quot;, -7.2829933, 112.7966985], [&quot;Industri&quot;, -7.2837293, 112.7976541],
+  [&quot;Sipil&quot;, -7.2807686, 112.7933211], [&quot;Lingkungan&quot;, -7.2797528, 112.7926403],
+  [&quot;Perkapalan&quot;, -7.2821102, 112.7972141], [&quot;Kelautan&quot;, -7.2822204, 112.7964260],
+  [&quot;Arsitektur&quot;, -7.2812372, 112.7940712], [&quot;DKV&quot;, -7.2785419, 112.7969058],
+  [&quot;Desain Produk&quot;, -7.2788916, 112.7964643], [&quot;PWK&quot;, -7.2797187, 112.7944083],
+  [&quot;Tower 1 (MIPA)&quot;, -7.2850531, 112.7941012], [&quot;Tower 2 (FT-EIC)&quot;, -7.2852456, 112.7953424],
+  [&quot;Matematika&quot;, -7.2849064, 112.7949670], [&quot;Fisika&quot;, -7.2845785, 112.7947413],
+  [&quot;Kimia&quot;, -7.2838771, 112.7947291], [&quot;Statistika&quot;, -7.2854211, 112.7941195],
+  [&quot;Biologi&quot;, -7.2856952, 112.7943173], [&quot;Geomatika&quot;, -7.2801213, 112.7946348],
+  [&quot;Geofisika&quot;, -7.2799537, 112.7955581], [&quot;Material&quot;, -7.2851298, 112.7978194],
+  [&quot;Komputer&quot;, -7.2844566, 112.7966371], [&quot;Instrumentasi&quot;, -7.2783138, 112.7922179],
+  [&quot;Teknik Fisika&quot;, -7.2844092, 112.7956180],
+];
+
+// ==== EKSEKUSI (jangan diubah) ====
+(function () {
+  let label = &quot;Manual&quot;;
+  let lat = LAT, lon = LNG;
+
+  if (MODE === &quot;GEDUNG&quot;) {
+    const p = POOL[GEDUNG % POOL.length];
+    lat = p[1]; lon = p[2]; label = p[0];
+  }
+
+  // jitter ±15m biar gak kedetect fake
+  lat += (Math.random() * 30 - 15) / 111320;
+  lon += (Math.random() * 30 - 15) / (111320 * Math.cos(lat * Math.PI / 180));
+  const acc = Math.random() &lt; 0.7 ? 5 + Math.floor(Math.random() * 11) : 16 + Math.floor(Math.random() * 20);
+  const ts = Date.now();
+
+  // 1) cache lokasi (dibaca app duluan)
+  localStorage.setItem(&#x27;user_location_cache&#x27;, JSON.stringify({ latitude: lat, longitude: lon, timestamp: ts }));
+
+  // 2) override geolocation
+  const fake = { coords: { latitude: lat, longitude: lon, accuracy: acc }, timestamp: ts };
+  Object.defineProperty(navigator, &#x27;geolocation&#x27;, {
+    get: () =&gt; ({
+      getCurrentPosition: cb =&gt; cb(fake),
+      watchPosition: cb =&gt; { cb(fake); return 0; },
+      clearWatch: () =&gt; {}
+    }),
+    configurable: true
+  });
+
+  // 3) permission palsu
+  if (navigator.permissions &amp;&amp; navigator.permissions.query) {
+    navigator.permissions.query = () =&gt; Promise.resolve({
+      state: &#x27;granted&#x27;, onchange: null,
+      addEventListener: () =&gt; {}, removeEventListener: () =&gt; {}
+    });
+  }
+
+  console.log(`%c✅ GPS SPOOF: ${label} | ${lat.toFixed(6)}, ${lon.toFixed(6)} | acc ${acc}m`, &#x27;color:#22c55e;font-weight:bold;font-size:13px&#x27;);
+  console.log(&#x27;%c🔄 Reload otomatis...&#x27;, &#x27;color:#f59e0b&#x27;);
+  setTimeout(() =&gt; location.reload(), 1000);
+})();</div>
+    <div class="note">Ganti <b style="background:none;color:#4ade80">LAT</b>/<b style="background:none;color:#4ade80">LNG</b> untuk koordinat manual, atau <b style="background:none;color:#4ade80">GEDUNG</b> = angka (0-28) untuk gedung spesifik. Jitter & anti-deteksi otomatis.</div>
+  </div>
+
   <div class="note">
     ⚠️ <b>Berlaku ±5 menit</b> — kalau pindah kelas / expired, ulangi lagi caranya.<br>
     Kode 6 digit dari dosen <b>tetap wajib</b> (spoof cuma lokasi, bukan kode).
@@ -195,6 +294,25 @@ function updBM() {
   document.getElementById('kodestatus').textContent = '✅ Kode digenerate: ' + label;
 }
 
+function copyConsole() {
+  const cb = document.getElementById('consolebox');
+  // 1) select otomatis — fallback universal (tinggal Ctrl+C / Cmd+C)
+  const range = document.createRange();
+  range.selectNodeContents(cb);
+  const sel = window.getSelection();
+  sel.removeAllRanges(); sel.addRange(range);
+  // 2) coba clipboard API (butuh izin browser — kalau berhasil bagus)
+  let done = false;
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(cb.textContent.trim()).then(() => {
+      document.getElementById('copiedConsole').textContent = '✅ Kode console terkopy! Tinggal paste di Console → Enter';
+    }).catch(() => {
+      document.getElementById('copiedConsole').textContent = '✅ Kode SUDAH KE-SELECT — tinggal Ctrl+C (atau Cmd+C) → paste di Console';
+    });
+  } else {
+    document.getElementById('copiedConsole').textContent = '✅ Kode SUDAH KE-SELECT — tinggal Ctrl+C (atau Cmd+C) → paste di Console';
+  }
+}
 function copyCode() {
   const cb = document.getElementById('codebox');
   if (navigator.clipboard && navigator.clipboard.writeText) {
