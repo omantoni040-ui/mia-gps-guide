@@ -273,26 +273,10 @@ function makeBM(idx) {
   let pool;
   if (idx < 0) { pool = GUIDE_POOL; } else { pool = [GUIDE_POOL[idx]]; }
   const poolArr = JSON.stringify(pool);
-  const bm = `javascript:(function(){
-  var POOL = ${poolArr};
-  var picked = POOL[Math.floor(Math.random()*POOL.length)];
-  var lat = picked[1], lon = picked[2], ts = Date.now();
-  lat += (Math.random()*30-15)/111320;
-  lon += (Math.random()*30-15)/(111320*Math.cos(lat*Math.PI/180));
-  var accuracy = Math.random()<0.7 ? 5+Math.floor(Math.random()*11) : 16+Math.floor(Math.random()*20);
-  try { localStorage.setItem('user_location_cache', JSON.stringify({latitude:lat,longitude:lon,timestamp:ts})); } catch(e){}
-  try {
-    var fakePos = { coords:{ latitude:lat, longitude:lon, accuracy:accuracy }, timestamp:ts };
-    Object.defineProperty(navigator,'geolocation',{ get:function(){ return {
-      getCurrentPosition:function(cb){cb(fakePos);},
-      watchPosition:function(cb){cb(fakePos);return 0;},
-      clearWatch:function(){}
-    };}, configurable:true });
-  } catch(e){}
-  alert('✅ GPS SPOOF AKTIF\\nLokasi: '+picked[0]+'\\nKoordinat: '+lat.toFixed(6)+', '+lon.toFixed(6)+'\\nAccuracy: '+accuracy+'m\\n\\nReload otomatis!');
-  location.reload();
-})();`;
-  return bm;
+  const bm = "javascript:(function(){var POOL=[  [\"Arsitektur\", -7.2812372, 112.7940712],  [\"Biologi\", -7.2856952, 112.7943173],  [\"Desain Komunikasi Visual\", -7.2785419, 112.7969058],  [\"Desain Produk Industri\", -7.2788916, 112.7964643],  [\"Fisika\", -7.2845785, 112.7947413],  [\"Gedung Kuliah Terpadu\", -7.2789283, 112.7949039],  [\"Jurusan Teknik Perkapalan\", -7.2818032, 112.7972901],  [\"Kimia\", -7.2838771, 112.7947291],  [\"Matematika\", -7.2849064, 112.794967],  [\"Perencanaan Wilayah & Kota\", -7.2797187, 112.7944083],  [\"Perpustakaan\", -7.2816092, 112.7954745],  [\"Sistem Informasi\", -7.2823959, 112.7947604],  [\"Sistem Perkapalan\", -7.2821244, 112.7967409],  [\"Statistika\", -7.2854211, 112.7941195],  [\"Teknik Elektro\", -7.2849264, 112.7960776],  [\"Teknik Fisika\", -7.2844092, 112.795618],  [\"Teknik Geofisika\", -7.2799537, 112.7955581],  [\"Teknik Geomatika\", -7.2801213, 112.7946348],  [\"Teknik Industri\", -7.2837293, 112.7976541],  [\"Teknik Informatika\", -7.2795736, 112.7972841],  [\"Teknik Instrumentasi\", -7.2783138, 112.7922179],  [\"Teknik Kelautan\", -7.2822204, 112.796426],  [\"Teknik Kimia\", -7.2829933, 112.7966985],  [\"Teknik Komputer\", -7.2844566, 112.7966371],  [\"Teknik Lingkungan\", -7.2797528, 112.7926403],  [\"Teknik Material & Metalurgi\", -7.2851298, 112.7978194],  [\"Teknik Mesin\", -7.2843551, 112.7961045],  [\"Teknik Perkapalan\", -7.2821102, 112.7972141],  [\"Teknik Sipil\", -7.2807686, 112.7933211],  [\"Tower 1 ITS (MIPA Tower / Sains Tower)\", -7.2850531, 112.7941012],  [\"Tower 2 ITS (FT-EIC)\", -7.2852456, 112.7953424]];var picked=POOL[Math.floor(Math.random()*POOL.length)];var lat=picked[1],lon=picked[2],ts=Date.now();lat+=(Math.random()*30-15)/111320;lon+=(Math.random()*30-15)/(111320*Math.cos(lat*Math.PI/180));var accuracy=Math.random()<0.7?5+Math.floor(Math.random()*11):16+Math.floor(Math.random()*20);try{localStorage.setItem('user_location_cache',JSON.stringify({latitude:lat,longitude:lon,timestamp:ts}));}catch(e){}try{var fakePos={coords:{latitude:lat,longitude:lon,accuracy:accuracy},timestamp:ts};Object.defineProperty(navigator,'geolocation',{get:function(){return{getCurrentPosition:function(cb){cb(fakePos);},watchPosition:function(cb){cb(fakePos);return 0;},clearWatch:function(){}};},configurable:true});}catch(e){}alert('GPS SPOOF AKTIF\\nLokasi: '+picked[0]+'\\nKoordinat: '+lat.toFixed(6)+', '+lon.toFixed(6)+'\\nAccuracy: '+accuracy+'m');location.reload();})();";
+  // single-line: ganti POOL sesuai pilihan, sisanya tetap
+  const pickedPool = (idx < 0) ? poolArr : JSON.stringify([pool[idx]]);
+  return bm.replace(poolArr, pickedPool);
 }
 let BM = makeBM(-1);
 document.getElementById('codebox').textContent = BM;
@@ -302,7 +286,7 @@ function updBM() {
   BM = makeBM(idx);
   document.getElementById('codebox').textContent = BM;
   const label = sel.options[sel.selectedIndex].text;
-  document.getElementById('kodestatus').textContent = label.startsWith('🎲') ? '🎲 Mode acak — lokasi beda tiap klik' : '✅ Kode siap: ' + label;
+  document.getElementById('kodestatus').textContent = label.startsWith('🎲') ? 'Mode acak - lokasi beda tiap klik' : 'Kode siap: ' + label;
 }
 function copyCode() {
   const cb = document.getElementById('codebox');
@@ -312,12 +296,12 @@ function copyCode() {
   sel.removeAllRanges(); sel.addRange(range);
   if (navigator.clipboard && navigator.clipboard.writeText) {
     navigator.clipboard.writeText(cb.textContent.trim()).then(() => {
-      document.getElementById('copied').textContent = '✅ Terkopy! Paste di address bar → Enter';
+      document.getElementById('copied').textContent = 'Terkopy! Paste di address bar > Enter';
     }).catch(() => {
-      document.getElementById('copied').textContent = '✅ Kode ke-select — tinggal Ctrl+C (Cmd+C)';
+      document.getElementById('copied').textContent = 'Kode ke-select - tinggal Ctrl+C (Cmd+C)';
     });
   } else {
-    document.getElementById('copied').textContent = '✅ Kode ke-select — tinggal Ctrl+C (Cmd+C)';
+    document.getElementById('copied').textContent = 'Kode ke-select - tinggal Ctrl+C (Cmd+C)';
   }
 }
 function copyConsole() {
@@ -328,12 +312,12 @@ function copyConsole() {
   sel.removeAllRanges(); sel.addRange(range);
   if (navigator.clipboard && navigator.clipboard.writeText) {
     navigator.clipboard.writeText(cb.textContent.trim()).then(() => {
-      document.getElementById('copiedConsole').textContent = '✅ Terkopy! Paste di Console → Enter';
+      document.getElementById('copiedConsole').textContent = 'Terkopy! Paste di Console > Enter';
     }).catch(() => {
-      document.getElementById('copiedConsole').textContent = '✅ Kode ke-select — tinggal Ctrl+C (Cmd+C)';
+      document.getElementById('copiedConsole').textContent = 'Kode ke-select - tinggal Ctrl+C (Cmd+C)';
     });
   } else {
-    document.getElementById('copiedConsole').textContent = '✅ Kode ke-select — tinggal Ctrl+C (Cmd+C)';
+    document.getElementById('copiedConsole').textContent = 'Kode ke-select - tinggal Ctrl+C (Cmd+C)';
   }
 }
 </script>
