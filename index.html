@@ -39,6 +39,42 @@
   <div class="card">
     <h2>💻 A. Desktop (Chrome/Edge/Firefox) — 30 detik</h2>
     <div class="step"><b>1</b> Klik tombol salin di bawah ⬇</div>
+    <label style="display:block;font-size:11px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.5);margin:12px 0 6px;">Pilih Lokasi Gedung (31 opsi):</label>
+<select id="locSelect" onchange="updBM()" style="width:100%;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:12px;padding:12px;color:#fff;font-size:14px;outline:none;margin-bottom:12px;">
+  <option value="-1">🎲 Acak (anti-deteksi + jitter otomatis)</option>
+<option value="0">Arsitektur — Gedung A2 (3lt)</option>
+    <option value="1">Biologi — Gedung K (3lt)</option>
+    <option value="2">Desain Komunikasi Visual — Gedung A5 (4lt)</option>
+    <option value="3">Desain Produk Industri — Gedung A4 (3lt)</option>
+    <option value="4">Fisika — Gedung H (2lt)</option>
+    <option value="5">Gedung Kuliah Terpadu — Gedung GKT (7lt)</option>
+    <option value="6">Jurusan Teknik Perkapalan — Gedung C2 (4lt)</option>
+    <option value="7">Kimia — Gedung J (3lt)</option>
+    <option value="8">Matematika — Gedung G (2lt)</option>
+    <option value="9">Perencanaan Wilayah & Kota — Gedung M (3lt)</option>
+    <option value="10">Perpustakaan — Gedung LIB (7lt)</option>
+    <option value="11">Sistem Informasi — Gedung F2 (3lt)</option>
+    <option value="12">Sistem Perkapalan — Gedung C3 (3lt)</option>
+    <option value="13">Statistika — Gedung G2 (2lt)</option>
+    <option value="14">Teknik Elektro — Gedung E (3lt)</option>
+    <option value="15">Teknik Fisika — Gedung E3 (3lt)</option>
+    <option value="16">Teknik Geofisika — Gedung H2 (4lt)</option>
+    <option value="17">Teknik Geomatika — Gedung A3 (3lt)</option>
+    <option value="18">Teknik Industri — Gedung I (3lt)</option>
+    <option value="19">Teknik Informatika — Gedung F (4lt)</option>
+    <option value="20">Teknik Instrumentasi — Gedung A6 (3lt)</option>
+    <option value="21">Teknik Kelautan — Gedung T (4lt)</option>
+    <option value="22">Teknik Kimia — Gedung J2 (4lt)</option>
+    <option value="23">Teknik Komputer — Gedung E2 (2lt)</option>
+    <option value="24">Teknik Lingkungan — Gedung L (3lt)</option>
+    <option value="25">Teknik Material & Metalurgi — Gedung D (4lt)</option>
+    <option value="26">Teknik Mesin — Gedung B (3lt)</option>
+    <option value="27">Teknik Perkapalan — Gedung C (4lt)</option>
+    <option value="28">Teknik Sipil — Gedung A (3lt)</option>
+    <option value="29">Tower 1 ITS (MIPA Tower / Sains Tower) — Gedung ST1 (9lt)</option>
+    <option value="30">Tower 2 ITS (FT-EIC) — Gedung T2 (11lt)</option>
+</select>
+<div id="kodestatus" class="ok"></div>
     <button class="btn" onclick="copyCode()">📋 SALIN KODE</button>
     <div id="copied" class="ok"></div>
     <div class="codebox" id="codebox"></div>
@@ -74,120 +110,105 @@
 </div>
 
 <script>
-// embed bookmarklet JS here
-const BM = `javascript:(function(){
-  const POOL = [
-    ["Gedung Kuliah Terpadu (GKT)", -7.2789283, 112.7949039],
-    ["Rektorat ITS", -7.2814439, 112.7945831],
-    ["Perpustakaan ITS", -7.2816092, 112.7954745],
-    ["Departemen Teknik Informatika", -7.2795736, 112.7972841],
-    ["Departemen Sistem Informasi", -7.2823959, 112.7947604],
-    ["Teknik Elektro", -7.2849264, 112.7960776],
-    ["Teknik Mesin", -7.2843551, 112.7961045],
-    ["Teknik Kimia", -7.2829933, 112.7966985],
-    ["Teknik Industri", -7.2837293, 112.7976541],
-    ["Teknik Sipil", -7.2808457, 112.7936216],
-    ["Teknik Lingkungan", -7.2797528, 112.7926403],
-    ["Teknik Perkapalan", -7.2821102, 112.7972141],
-    ["Teknik Kelautan", -7.2822204, 112.7964260],
-    ["Arsitektur", -7.2812372, 112.7940712],
-    ["Desain Produk Industri", -7.2788916, 112.7964643],
-    ["Desain Komunikasi Visual", -7.2785419, 112.7969058],
-    ["Perencanaan Wilayah & Kota", -7.2797187, 112.7944083],
-    ["MIPA Tower", -7.2850531, 112.7941012],
-    ["Matematika", -7.2849064, 112.7949670],
-    ["Fisika", -7.2845785, 112.7947413],
-    ["Kimia", -7.2838771, 112.7947291],
-    ["Statistika", -7.2854211, 112.7941195],
-    ["Biologi FMIPA", -7.2856952, 112.7943173],
-    ["Teknik Geomatika", -7.2801213, 112.7946348],
-    ["Teknik Geofisika", -7.2799537, 112.7955581],
-    ["Teknik Material & Metalurgi", -7.2851298, 112.7978194],
-    ["Teknik Komputer", -7.2844566, 112.7966371],
-    ["Gedung Pusat Robotika", -7.2770305, 112.7979550],
-    ["SCC", -7.2834463, 112.7935925],
-    ["Masjid Manarul Ilmi", -7.2823625, 112.7930786],
-    ["Kantin Pusat", -7.2838330, 112.7941114],
-    ["Gedung Teater A", -7.2834168, 112.7950993],
-    ["Puskom", -7.2830297, 112.7949040],
-    ["BAUK ITS", -7.2827647, 112.7947578],
-    ["Lab Bahasa", -7.2825597, 112.7955965],
-    ["LPPM ITS", -7.2808765, 112.7962040],
-    ["Gedung Pusat Riset", -7.2810738, 112.7972911],
-    ["Gedung D3", -7.2788135, 112.7924260],
-    ["Gedung Nasdec", -7.2790337, 112.7984994],
-    ["GOR Bulutangkis", -7.2867484, 112.7930037],
-    ["Stadion ITS", -7.2854059, 112.7918306],
-    ["Teknik Instrumentasi", -7.2783138, 112.7922179],
-    ["Teknik Fisika", -7.2844092, 112.7956180],
-    ["Theater B", -7.2842503, 112.7950745]
-  ];
+// ===== POOL data (31 gedung) =====
+const GUIDE_POOL = [
+  ["Arsitektur", -7.2812372, 112.7940712],
+  ["Biologi", -7.2856952, 112.7943173],
+  ["Desain Komunikasi Visual", -7.2785419, 112.7969058],
+  ["Desain Produk Industri", -7.2788916, 112.7964643],
+  ["Fisika", -7.2845785, 112.7947413],
+  ["Gedung Kuliah Terpadu", -7.2789283, 112.7949039],
+  ["Jurusan Teknik Perkapalan", -7.2818032, 112.7972901],
+  ["Kimia", -7.2838771, 112.7947291],
+  ["Matematika", -7.2849064, 112.794967],
+  ["Perencanaan Wilayah & Kota", -7.2797187, 112.7944083],
+  ["Perpustakaan", -7.2816092, 112.7954745],
+  ["Sistem Informasi", -7.2823959, 112.7947604],
+  ["Sistem Perkapalan", -7.2821244, 112.7967409],
+  ["Statistika", -7.2854211, 112.7941195],
+  ["Teknik Elektro", -7.2849264, 112.7960776],
+  ["Teknik Fisika", -7.2844092, 112.795618],
+  ["Teknik Geofisika", -7.2799537, 112.7955581],
+  ["Teknik Geomatika", -7.2801213, 112.7946348],
+  ["Teknik Industri", -7.2837293, 112.7976541],
+  ["Teknik Informatika", -7.2795736, 112.7972841],
+  ["Teknik Instrumentasi", -7.2783138, 112.7922179],
+  ["Teknik Kelautan", -7.2822204, 112.796426],
+  ["Teknik Kimia", -7.2829933, 112.7966985],
+  ["Teknik Komputer", -7.2844566, 112.7966371],
+  ["Teknik Lingkungan", -7.2797528, 112.7926403],
+  ["Teknik Material & Metalurgi", -7.2851298, 112.7978194],
+  ["Teknik Mesin", -7.2843551, 112.7961045],
+  ["Teknik Perkapalan", -7.2821102, 112.7972141],
+  ["Teknik Sipil", -7.2807686, 112.7933211],
+  ["Tower 1 ITS (MIPA Tower / Sains Tower)", -7.2850531, 112.7941012],
+  ["Tower 2 ITS (FT-EIC)", -7.2852456, 112.7953424]
+];
 
-  // jitter ±15m biar koordinat gak pernah sama persis 2x
-  function jitter(lat, lon) {
-    var latOff = (Math.random() * 30 - 15) / 111320;   // ±15m lat
-    var lonOff = (Math.random() * 30 - 15) / (111320 * Math.cos(lat * Math.PI / 180));
-    return [lat + latOff, lon + lonOff];
+function makeBM(idx) {
+  let pool;
+  if (idx < 0) {
+    pool = GUIDE_POOL;
+  } else {
+    pool = [GUIDE_POOL[idx]];
   }
-
-  // Pilih gedung acak + jitter
-  var idx = Math.floor(Math.random() * POOL.length);
-  var picked = POOL[idx];
-  var coords = jitter(picked[1], picked[2]);
-  var lat = coords[0], lon = coords[1];
-  var ts = Date.now();
-
-  // accuracy dinamis: 70% outdoor 5-15m, 30% indoor 16-35m
-  var accuracy = (Math.random() < 0.7) ? (5 + Math.floor(Math.random() * 11)) : (16 + Math.floor(Math.random() * 20));
-
-  // LAPIS 1: inject cache lokasi (app baca ini DULU)
+  const picked = pool[Math.floor(Math.random()*pool.length)];
+  // build bookmarklet dengan pool yang dipilih
+  const poolArr = JSON.stringify(pool)
+    .replace(/\"/g, '"');
+  const bm = `javascript:(function(){
+  var POOL = ${poolArr};
+  var picked = POOL[Math.floor(Math.random()*POOL.length)];
+  var lat = picked[1], lon = picked[2], ts = Date.now();
+  lat += (Math.random()*30-15)/111320;
+  lon += (Math.random()*30-15)/(111320*Math.cos(lat*Math.PI/180));
+  var accuracy = Math.random()<0.7 ? 5+Math.floor(Math.random()*11) : 16+Math.floor(Math.random()*20);
+  try { localStorage.setItem('user_location_cache', JSON.stringify({latitude:lat,longitude:lon,timestamp:ts})); } catch(e){}
   try {
-    localStorage.setItem('user_location_cache', JSON.stringify({
-      latitude: lat, longitude: lon, timestamp: ts
-    }));
-  } catch(e) {}
+    var fakePos = { coords:{ latitude:lat, longitude:lon, accuracy:accuracy }, timestamp:ts };
+    Object.defineProperty(navigator,'geolocation',{ get:function(){ return {
+      getCurrentPosition:function(cb){cb(fakePos);},
+      watchPosition:function(cb){cb(fakePos);return 0;},
+      clearWatch:function(){}
+    };}, configurable:true });
+  } catch(e){}
+  alert('✅ GPS SPOOF AKTIF
+Lokasi: '+picked[0]+'
+Koordinat: '+lat.toFixed(6)+', '+lon.toFixed(6)+'
+Accuracy: '+accuracy+'m
 
-  // LAPIS 2: override geolocation API (backup)
-  try {
-    var fakePos = { coords: { latitude: lat, longitude: lon, accuracy: accuracy,
-                              altitude: null, heading: null, speed: null }, timestamp: ts };
-    Object.defineProperty(navigator, 'geolocation', {
-      get: function() {
-        return {
-          getCurrentPosition: function(cb){ cb(fakePos); },
-          watchPosition: function(cb){ cb(fakePos); return 0; },
-          clearWatch: function(){}
-        };
-      },
-      configurable: true
-    });
-    if (navigator.permissions && navigator.permissions.query) {
-      navigator.permissions.query = function() {
-        return Promise.resolve({ state: 'granted', onchange: null,
-          addEventListener: function(){}, removeEventListener: function(){} });
-      };
-    }
-  } catch(e) {}
-
-  alert('✅ GPS SPOOF AKTIF (v2 - lokasi dinamis)\n\n' +
-        'Gedung: ' + picked[0] + '\n' +
-        'Koordinat: ' + lat.toFixed(6) + ', ' + lon.toFixed(6) + '\n' +
-        'Accuracy: ' + accuracy + 'm\n\n' +
-        'Lokasi BERPINDAH tiap pemakaian → anti-deteksi fake.\n' +
-        'Berlaku 5 menit. Reload otomatis!');
+Reload otomatis!');
   location.reload();
 })();`;
+  return bm;
+}
 
+let BM = makeBM(-1);
 document.getElementById('codebox').textContent = BM;
+
+function updBM() {
+  const sel = document.getElementById('locSelect');
+  const idx = parseInt(sel.value) || -1;
+  BM = makeBM(idx);
+  document.getElementById('codebox').textContent = BM;
+  const label = sel.options[sel.selectedIndex].text;
+  document.getElementById('kodestatus').textContent = '✅ Kode digenerate: ' + label;
+}
 
 function copyCode() {
   const cb = document.getElementById('codebox');
-  const range = document.createRange();
-  range.selectNodeContents(cb);
-  const sel = window.getSelection();
-  sel.removeAllRanges(); sel.addRange(range);
-  try { document.execCommand('copy'); } catch(e) {}
-  document.getElementById('copied').textContent = '✅ Terkopy! Tinggal paste di address bar (langkah 3)';
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(cb.textContent).then(() => {
+      document.getElementById('copied').textContent = '✅ Terkopy! Tinggal paste di address bar (langkah 3)';
+    });
+  } else {
+    const range = document.createRange();
+    range.selectNodeContents(cb);
+    const sel = window.getSelection();
+    sel.removeAllRanges(); sel.addRange(range);
+    try { document.execCommand('copy'); } catch(e) {}
+    document.getElementById('copied').textContent = '✅ Terkopy! Tinggal paste di address bar (langkah 3)';
+  }
 }
 </script>
 </body>
