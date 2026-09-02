@@ -226,7 +226,12 @@
     <button class="btn sec" onclick="copyConsole()">📋 Salin kode console</button>
     <div id="copiedConsole" class="ok"></div>
     <div class="codebox" id="consolebox"></div>
-    <div class="note">Ganti <b>LAT</b>/<b>LNG</b> untuk manual, atau <b>GEDUNG</b> = angka (0-28). Jitter & anti-deteksi otomatis.</div>
+    
+    <button class="btn sec" onclick="copyVerifier()" style="margin-top:10px;">🔍 Cek lokasi sebelum Hadir</button>
+    <div id="copiedVerifier" class="ok"></div>
+    <div class="codebox" id="verifierbox" style="max-height:120px;"></div>
+    <div class="note">Setelah bookmarklet jalan & halaman reload, paste verifier ini di console → muncul <b>✅ OK</b> = aman klik Hadir. <b>❌ MISMATCH</b> = target beda, cek koordinat.</div>
+<div class="note">Ganti <b>LAT</b>/<b>LNG</b> untuk manual, atau <b>GEDUNG</b> = angka (0-28). Jitter & anti-deteksi otomatis.</div>
   </div>
 
   <div class="note" style="margin-top:0;">
@@ -356,6 +361,22 @@ function copyBookmarkHP() {
     document.getElementById('copiedHP').textContent = 'Kode ke-select - tinggal salin (long-press > Salin)';
   }
 }
+function copyVerifier() {
+  const cb = document.getElementById('verifierbox');
+  const range = document.createRange();
+  range.selectNodeContents(cb);
+  const sel = window.getSelection();
+  sel.removeAllRanges(); sel.addRange(range);
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(cb.textContent.trim()).then(() => {
+      document.getElementById('copiedVerifier').textContent = 'Terkopy! Paste di console SETELAH halaman reload';
+    }).catch(() => {
+      document.getElementById('copiedVerifier').textContent = 'Kode ke-select - tinggal salin';
+    });
+  } else {
+    document.getElementById('copiedVerifier').textContent = 'Kode ke-select - tinggal salin';
+  }
+}
 function copyCode() {
   const cb = document.getElementById('codebox');
   const range = document.createRange();
@@ -468,5 +489,74 @@ var GE = 17;             // kepake kalau MODE = 1 (17 = Tower 1)
 <script>document.getElementById('consolebox').textContent = document.getElementById('consoleSource').textContent;</script>
 <div id='hpSource' hidden>javascript:(function(){var POOL=[  [&quot;Arsitektur&quot;, -7.2812372, 112.7940712],  [&quot;Biologi&quot;, -7.2856952, 112.7943173],  [&quot;Desain Komunikasi Visual&quot;, -7.2785419, 112.7969058],  [&quot;Desain Produk Industri&quot;, -7.2788916, 112.7964643],  [&quot;Fisika&quot;, -7.2845785, 112.7947413],  [&quot;Gedung Kuliah Terpadu&quot;, -7.2789283, 112.7949039],  [&quot;Kimia&quot;, -7.2838771, 112.7947291],  [&quot;Matematika&quot;, -7.2849064, 112.794967],  [&quot;Perencanaan Wilayah &amp; Kota&quot;, -7.2797187, 112.7944083],  [&quot;Perpustakaan&quot;, -7.2816092, 112.7954745],  [&quot;Sistem Informasi&quot;, -7.2823959, 112.7947604],  [&quot;Sistem Perkapalan (C3)&quot;, -7.2821244, 112.7967409],  [&quot;Statistika&quot;, -7.2854211, 112.7941195],  [&quot;Teknik Elektro&quot;, -7.2849264, 112.7960776],  [&quot;Teknik Fisika&quot;, -7.2844092, 112.795618],  [&quot;Teknik Geofisika&quot;, -7.2799537, 112.7955581],  [&quot;Teknik Geomatika&quot;, -7.2801213, 112.7946348],  [&quot;Teknik Industri&quot;, -7.2837293, 112.7976541],  [&quot;Teknik Informatika&quot;, -7.2795736, 112.7972841],  [&quot;Teknik Instrumentasi&quot;, -7.2783138, 112.7922179],  [&quot;Teknik Kelautan&quot;, -7.2822204, 112.796426],  [&quot;Teknik Kimia&quot;, -7.2829933, 112.7966985],  [&quot;Teknik Komputer&quot;, -7.2844566, 112.7966371],  [&quot;Teknik Lingkungan&quot;, -7.2797528, 112.7926403],  [&quot;Teknik Material &amp; Metalurgi&quot;, -7.2851298, 112.7978194],  [&quot;Teknik Mesin&quot;, -7.2843551, 112.7961045],  [&quot;Teknik Perkapalan (C)&quot;, -7.2821102, 112.7972141],  [&quot;Teknik Perkapalan (C2)&quot;, -7.2818032, 112.7972901],  [&quot;Teknik Sipil&quot;, -7.2807686, 112.7933211],  [&quot;Tower 1 ITS (MIPA Tower / Sains Tower)&quot;, -7.2850531, 112.7941012],  [&quot;Tower 2 ITS (FT-EIC)&quot;, -7.2852456, 112.7953424]];var p=POOL[Math.floor(Math.random()*POOL.length)];var lat=p[1],lon=p[2],ts=Date.now();lat+=(Math.random()*30-15)/111320;lon+=(Math.random()*30-15)/(111320*Math.cos(lat*Math.PI/180));try{localStorage.setItem(&#x27;user_location_cache&#x27;,JSON.stringify({latitude:lat,longitude:lon,timestamp:ts}));}catch(e){}var f={coords:{latitude:lat,longitude:lon,accuracy:10},timestamp:ts};Object.defineProperty(navigator,&#x27;geolocation&#x27;,{get:function(){return{getCurrentPosition:function(cb){cb(f);},watchPosition:function(cb){cb(f);return 0;},clearWatch:function(){}};},configurable:true});location.reload();})();</div>
 <script>document.getElementById('hpbox').textContent = document.getElementById('hpSource').textContent;</script>
+
+<div id='verifierSource' hidden>// ═══════════════════════════════════════════════════════════════
+// ✅ VERIFIER — Cek lokasi yang AKAN dikirim ke server
+// ═══════════════════════════════════════════════════════════════
+// CARA PAKAI:
+//   1. Paste bookmarklet GPS dulu (seperti biasa)
+//   2. DI HALAMAN SETELAH RELOAD, tekan F12 → Console
+//   3. Paste kode ini → Enter → muncul status ✅/❌
+//   4. Kalau ✅ hijau, klik Hadir — dijamin pakai koordinat target
+// ═══════════════════════════════════════════════════════════════
+
+// ISI KOORDINAT YANG LO MAU — harus SAMA dengan yang lo set di bookmarklet
+var TARGET_LAT = -7.2819695;   // ← sesuai input lo
+var TARGET_LNG = 112.7950407;  // ← sesuai input lo
+
+// ── jangan ubah di bawah ────────────────────────────────────────
+(function () {
+  // 1. Baca apa yang akan dikirim app (replay logika asli app)
+  function readCache() {
+    try {
+      var raw = localStorage.getItem(&#x27;user_location_cache&#x27;);
+      if (!raw) return null;
+      var c = JSON.parse(raw);
+      if (Date.now() - c.timestamp &lt; 300000) return c;
+      localStorage.removeItem(&#x27;user_location_cache&#x27;);
+    } catch (e) {}
+    return null;
+  }
+
+  var cache = readCache();
+  var hasil = [];
+
+  if (!cache) {
+    hasil.push([&#x27;❌ Cache lokasi KOSONG — bookmarklet belum jalan / lebih dari 5 menit. Paste ulang!&#x27;, &#x27;red&#x27;]);
+  } else {
+    // 2. Bandingkan dengan target
+    var diffLat = Math.abs(cache.latitude - TARGET_LAT) * 111320;
+    var diffLng = Math.abs(cache.longitude - TARGET_LNG) * (111320 * 0.99218);
+    var dist = Math.sqrt(diffLat * diffLat + diffLng * diffLng);
+
+    hasil.push([&#x27;📡 Cache location : &#x27; + cache.latitude.toFixed(6) + &#x27;, &#x27; + cache.longitude.toFixed(6), &#x27;gray&#x27;]);
+    hasil.push([&#x27;🎯 Target lo       : &#x27; + TARGET_LAT.toFixed(6) + &#x27;, &#x27; + TARGET_LNG.toFixed(6), &#x27;gray&#x27;]);
+
+    if (dist &lt;= 25) {
+      hasil.push([&#x27;✅ OK — jarak &#x27; + dist.toFixed(1) + &#x27;m dari target (dalam jitter ±15m). Koordinat SPOOF yang akan dikirim!&#x27;, &#x27;green&#x27;]);
+    } else {
+      hasil.push([&#x27;❌ MISMATCH — jarak &#x27; + dist.toFixed(0) + &#x27;m dari target. Koordinat cache BUKAN punya lo!&#x27;, &#x27;red&#x27;]);
+    }
+
+    // 3. Cek GPS asli masih di-override gak
+    var overridden = false;
+    try {
+      navigator.geolocation.getCurrentPosition(function (pos) {
+        var d2 = Math.abs(pos.coords.latitude - TARGET_LAT) * 111320;
+        if (d2 &lt; 100) overridden = true;
+      });
+    } catch (e) {}
+    hasil.push([overridden || dist &lt;= 25 ? &#x27;✅ GPS API override aktif — fallback pun aman&#x27; : &#x27;⚠️ GPS API gak ke-override (cache masih menang)&#x27;, &#x27;orange&#x27;]);
+  }
+
+  console.log(&#x27;%c════════ VERIFIKASI GPS SPOOF ════════&#x27;, &#x27;font-weight:bold;font-size:13px&#x27;);
+  hasil.forEach(function (h) {
+    var color = h[1] === &#x27;green&#x27; ? &#x27;#22c55e&#x27; : h[1] === &#x27;red&#x27; ? &#x27;#ef4444&#x27; : h[1] === &#x27;orange&#x27; ? &#x27;#f59e0b&#x27; : &#x27;#9ca3af&#x27;;
+    console.log(&#x27;%c&#x27; + h[0], &#x27;color:&#x27; + color + &#x27;;font-size:12px;font-weight:&#x27; + (h[1] === &#x27;green&#x27; || h[1] === &#x27;red&#x27; ? &#x27;bold&#x27; : &#x27;normal&#x27;));
+  });
+  console.log(&#x27;%c═══════════════════════════════════&#x27;, &#x27;font-weight:bold&#x27;);
+  console.log(&#x27;%cKALAU ✅ HIJAU → klik Hadir. Dijamin server terima koordinat target.&#x27;, &#x27;color:#22c55e;font-size:12px&#x27;);
+})();</div>
+<script>document.getElementById('verifierbox').textContent = document.getElementById('verifierSource').textContent;</script>
 </body>
 </html>
